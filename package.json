@@ -16,6 +16,13 @@
     "express": "^4.17.1"
   },
   "scripts": {
+    "prepare": "npm run gcp-build",
+    "pretest": "npm run gcp-build",
+    "test": "mocha test/*.test.js --exit",
+    "posttest": "npm run lint",
+    "lint": "tslint -p .",
+    "gcp-build": "tsc -p .",
+    "deploy": "gcloud app deploy",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
