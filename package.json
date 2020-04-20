@@ -25,7 +25,7 @@
     "test": "mocha test/*.test.js --exit",
     "posttest": "npm run lint",
     "lint": "tslint -p .",
-    "gcp-build": "tsc -p .",
+    "gcp-build": "cp -r static dist |tsc -p .",
     "deploy": "gcloud app deploy",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "build": "cp -r static dist |tsc -p tsconfig.json",
