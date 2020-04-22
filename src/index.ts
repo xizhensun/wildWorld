@@ -8,7 +8,7 @@ import { monitor } from '@colyseus/monitor';
 
 // Import demo room handlers
 import { ChatRoom } from "./rooms/chat-room";
-import { StateHandlerRoom } from "./rooms/state-handler";
+import { BattleRoom } from "./rooms/state-handler";
 import { AuthRoom } from "./rooms/auth-handler";
 import { ReconnectionRoom } from './rooms/reconnection';
 
@@ -34,7 +34,7 @@ gameServer.define("chat_with_options", ChatRoom, {
     custom_options: "you can use me on Room#onCreate"
 });
 
-gameServer.define("state_handler", StateHandlerRoom);
+gameServer.define("state_handler", BattleRoom);
 gameServer.define("auth", AuthRoom);
 gameServer.define("reconnection", ReconnectionRoom);
 

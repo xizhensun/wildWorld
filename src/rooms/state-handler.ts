@@ -1,45 +1,14 @@
 import { Room, Client } from "colyseus";
-import { Schema, type, MapSchema } from "@colyseus/schema";
+import {World, Monster, Player, Bubble} from "../entities/model"
 
-export class Player extends Schema {
-    @type("number")
-    x = Math.floor(Math.random() * 400);
-
-    @type("number")
-    y = Math.floor(Math.random() * 400);
-}
-
-export class State extends Schema {
-    @type({ map: Player })
-    players = new MapSchema<Player>();
-
-    something = "This attribute won't be sent to the client-side";
-
-    createPlayer (id: string) {
-        this.players[ id ] = new Player();
-    }
-
-    removePlayer (id: string) {
-        delete this.players[ id ];
-    }
-
-    movePlayer (id: string, movement: any) {
-        if (movement.x) {
-            this.players[ id ].x += movement.x * 10;
-
-        } else if (movement.y) {
-            this.players[ id ].y += movement.y * 10;
-        }
-    }
-}
-
-export class StateHandlerRoom extends Room<State> {
+export class BattleRoom extends Room<World> {
     maxClients = 4;
 
     onCreate (options) {
-        console.log("StateHandlerRoom created!", options);
+        console.log("World created!", options);
 
-        this.setState(new State());
+        this.setState(new World());
+        this.clock.setInterval(this.serverGameLoop,100);
     }
 
     onAuth(client, options, req) {
@@ -57,12 +26,21 @@ export class StateHandlerRoom extends Room<State> {
     }
 
     onMessage (client, data) {
-        console.log("StateHandlerRoom received message from", client.sessionId, ":", data);
-        this.state.movePlayer(client.sessionId, data);
+        console.log("BattleRoom received message from", client.sessionId, ":", data);
+        let player = this.state.getPlayer(client.sessionId);
+        player.updateAction(data);
     }
 
     onDispose () {
         console.log("Dispose StateHandlerRoom");
     }
 
+    serverGameLoop = () => {
+        // for(let i in this.state.players)
+        // {
+        //     let player= this.state.players[i];
+        //     player.action();
+        // }
+        console.log("currentTime:"+ this.clock.deltaTime);
+    }
 }
